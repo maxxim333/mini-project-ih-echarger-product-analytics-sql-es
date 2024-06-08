@@ -77,8 +77,17 @@ ORDER BY average_duration;
 -- LEVEL 3
 
 -- Question 6: Full username of users that have used more than one charger in one day (NOTE: for date only consider start_time)
-SELECT user_id, charger_id, DATE(start_time) AS date_only
-FROM sessions;
+WITH grouped AS (
+    SELECT user_id, charger_id, DATE(start_time) AS date_only FROM sessions
+    GROUP BY charger_id, date_only
+    )
+    
+SELECT DISTINCT user_id FROM grouped
+
+GROUP BY user_id, date_only
+HAVING COUNT(DISTINCT charger_id) > 1
+ORDER BY user_id;
+
 
 
 
